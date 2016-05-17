@@ -10,7 +10,7 @@ def isEligible(x: Int): Boolean = {
   val remainder = total - x
   if (x * 2 >= total)
     false
-  else if (numbers contains remainder.toString)
+  else if (index contains remainder.toString)
     true
   else false
 }

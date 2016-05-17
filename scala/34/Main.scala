@@ -1,7 +1,7 @@
 
 object Main extends App {
 
-  def createIsEligible(total: Int, numbers: Array[String])(x: Int): Boolean = {
+  def createIsEligible(total: Int, numbers: Map[String, Int])(x: Int): Boolean = {
     val remainder = total - x
     if (x * 2 >= total)
       false
@@ -26,16 +26,15 @@ object Main extends App {
     val numbers = numbersString.split(",")
     val index = numbers.zipWithIndex.toMap
 
-    val isEligible = createIsEligible(total, numbers) _
+    val isEligible = createIsEligible(total, index) _
     val expand = createExpand(total) _
 
-    val newLine = numbers.map(_.toInt)
+    val pairs = numbers.map(_.toInt)
       .filter(isEligible)
       .map(expand)
-      .mkString(";")
 
-    if (newLine.length > 0)
-      println(newLine)
+    if (pairs.length > 0)
+      println(pairs.mkString(";"))
     else
       println("NULL")
   }
