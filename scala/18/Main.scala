@@ -1,9 +1,7 @@
 object Main extends App {
   def findLargerValue(n: Int, m: Int, incr: Int): Int = {
-    if (n > m)
-      findLargerValue(n, m + incr, incr)
-    else
-      m
+    if (n > m) findLargerValue(n, m + incr, incr)
+    else m
   }
 
   val file = scala.io.Source.fromFile(args(0))
