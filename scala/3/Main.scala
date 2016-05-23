@@ -4,7 +4,7 @@ object Main extends App {
   }
 
   def isPrime(n: Int) = {
-    ! (2 to n / 2).exists(n % _ == 0)
+    ! (2 to math.sqrt(n).toInt).exists(n % _ == 0)
   }
 
   (1000 to 2 by -1).toIterator
