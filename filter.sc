@@ -25,42 +25,22 @@ class TopLevelFilter extends Filter {
   }
 }
 
-trait FilterFactoryInterface {
-  def create(config: Seq[String]): Filter
-}
-
-object ScopeFilter extends FilterFactoryInterface {
-  def create(config: Seq[String]) = {
-    new ScopeFilter(config)
-  }
-}
-object TypeFilter extends FilterFactoryInterface {
-  def create(config: Seq[String]) = {
-    new TypeFilter(config.map(_.toInt))
-  }
-}
-object TopLevelFilter extends FilterFactoryInterface {
-  def create(config: Seq[String]) = {
-    new TopLevelFilter
-  }
-}
-
 class FilterFactory {
-  val factories: MutMap[String, FilterFactoryInterface] = MutMap()
-  def add(alias: String, factory: FilterFactoryInterface) = {
+  val factories: MutMap[String, Seq[String] => Filter] = MutMap()
+  def add(alias: String, factory: Seq[String] => Filter) = {
     factories(alias) = factory
   }
 
   def create(alias: String, config: Seq[String] = Seq()): Option[Filter] = {
     if ( ! factories.contains(alias)) None
-    else Some(factories(alias).create(config))
+    else Some(factories(alias)(config))
   }
 }
 
 val factory = new FilterFactory
-factory.add("scope", ScopeFilter)
-factory.add("type", TypeFilter)
-factory.add("top_level", TopLevelFilter)
+factory.add("scope", config => new ScopeFilter(config))
+factory.add("type", config => new TypeFilter(config.map(_.toInt)))
+factory.add("top_level", config => new TopLevelFilter)
 
 val a = Category(Array[Int](), "category")
 val b = Category(Array(1, 2), "game")
@@ -71,7 +51,7 @@ filterScope(a)
 filterScope(b)
 filterScope(c)
 
-val filterType = factory.create("scope", Array("1")).get
+val filterType = factory.create("type", Array("1")).get
 filterType(a)
 filterType(b)
 filterType(c)
