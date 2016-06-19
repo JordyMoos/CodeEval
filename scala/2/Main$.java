@@ -15,4 +15,3 @@ object Main extends App {
     println(row.map(paddingCount).min)
   }
 }
-
